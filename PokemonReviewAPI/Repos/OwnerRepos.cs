@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokemonReviewAPI.Data;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos.Interfaces;
 
@@ -28,6 +29,16 @@ namespace PokemonReviewAPI.Repos {
 
         public async Task<bool> OwnerExists(int id) {
             return await _dbContext.Owners.AnyAsync(x => x.Id == id);
+        }
+
+        public async Task<Owner> CreateOwner(Owner owner) {
+            await _dbContext.Owners.AddAsync(owner);
+            await _dbContext.SaveChangesAsync();
+            return owner;
+        }
+
+        public Owner ConvertFromDto(OwnerDto ownerDto) {
+            return new Owner { Id = ownerDto.Id, FirstName = ownerDto.FirstName, LastName = ownerDto.LastName, Gym = ownerDto.Gym };
         }
     }
 }

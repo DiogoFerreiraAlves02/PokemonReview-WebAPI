@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokemonReviewAPI.Data;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos.Interfaces;
 
@@ -28,6 +29,20 @@ namespace PokemonReviewAPI.Repos {
 
         public async Task<List<Owner>> GetOwnersFromACountry(int id) {
             return await _dbContext.Owners.Where(x => x.Country.Id == id).ToListAsync();
+        }
+
+        public async Task<Country> CreateCountry(Country country) {
+            await _dbContext.Countries.AddAsync(country);
+            await _dbContext.SaveChangesAsync();
+            return country;
+        }
+
+        public async Task<Country> CheckDuplicateCountry(Country country) {
+            return await _dbContext.Countries.Where(x => x.Name.Trim().ToUpper() == country.Name.Trim().ToUpper()).FirstOrDefaultAsync();
+        }
+
+        public Country ConvertFromDto(CountryDto countryDto) {
+            return new Country { Id = countryDto.Id, Name = countryDto.Name };
         }
     }
 }

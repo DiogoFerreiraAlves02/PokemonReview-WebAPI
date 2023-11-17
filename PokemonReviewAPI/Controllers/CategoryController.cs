@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos;
 using PokemonReviewAPI.Repos.Interfaces;
@@ -30,6 +31,33 @@ namespace PokemonReviewAPI.Controllers {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
+            return Ok(category);
+        }
+
+        [HttpGet("{categoryId}/pokemons")]
+        public async Task<ActionResult<List<Pokemon>>> GetPokemonsByCategory(int categoryId) {
+            if (!await _categoryRepos.CategoryExists(categoryId)) return NotFound();
+            var pokemons = await _categoryRepos.GetPokemonByCategory(categoryId);
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(pokemons);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Category>> CreateCategory([FromBody] CategoryDto categoryCreate) {
+            if (categoryCreate == null) return BadRequest(ModelState);
+
+            Category category = _categoryRepos.ConvertFromDto(categoryCreate);
+
+            if (await _categoryRepos.CheckDuplicateCategory(category) != null) {
+                ModelState.AddModelError("", "Category already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            category = await _categoryRepos.CreateCategory(category);
+
             return Ok(category);
         }
 

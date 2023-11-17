@@ -7,6 +7,5 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<Pokemon> GetPokemon(string name);
         Task<decimal> GetPokemonRating(int id);
         Task<bool> PokemonExists(int id);
-        Task<List<Pokemon>> GetPokemonByCategory(int categoryId);
     }
 }

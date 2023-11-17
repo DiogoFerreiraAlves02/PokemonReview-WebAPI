@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos;
 using PokemonReviewAPI.Repos.Interfaces;
@@ -10,9 +11,11 @@ namespace PokemonReviewAPI.Controllers {
     public class OwnerController : ControllerBase {
         private readonly IOwnerRepos _ownerRepos;
         private readonly IPokemonRepos _pokemonRepos;
-        public OwnerController(IOwnerRepos ownerRepos, IPokemonRepos pokemonRepos) {
+        private readonly ICountryRepos _countryRepos;
+        public OwnerController(IOwnerRepos ownerRepos, IPokemonRepos pokemonRepos, ICountryRepos countryRepos) {
             _ownerRepos=ownerRepos;
             _pokemonRepos=pokemonRepos;
+            _countryRepos=countryRepos;
         }
 
         [HttpGet]
@@ -53,6 +56,18 @@ namespace PokemonReviewAPI.Controllers {
                 return BadRequest(ModelState);
             }
             return Ok(owners);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Owner>> CreateOwner([FromQuery] int countryId, [FromBody] OwnerDto ownerCreate) {
+            if (ownerCreate == null) return BadRequest(ModelState);
+
+            Owner owner = _ownerRepos.ConvertFromDto(ownerCreate);
+            owner.Country = await _countryRepos.GetCountry(countryId);
+
+            owner = await _ownerRepos.CreateOwner(owner);
+
+            return Ok(owner);
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos;
 using PokemonReviewAPI.Repos.Interfaces;
@@ -42,6 +43,22 @@ namespace PokemonReviewAPI.Controllers {
             if (!ModelState.IsValid) {
                 return BadRequest(ModelState);
             }
+            return Ok(country);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Country>> CreateCountry([FromBody] CountryDto countryCreate) {
+            if (countryCreate == null) return BadRequest(ModelState);
+
+            Country country = _countryRepos.ConvertFromDto(countryCreate);
+
+            if (await _countryRepos.CheckDuplicateCountry(country) != null) {
+                ModelState.AddModelError("", "Country already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            country = await _countryRepos.CreateCountry(country);
+
             return Ok(country);
         }
 

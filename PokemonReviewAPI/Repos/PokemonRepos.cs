@@ -33,9 +33,5 @@ namespace PokemonReviewAPI.Repos {
         public async Task<bool> PokemonExists(int id) {
             return await _dbContext.Pokemons.AnyAsync(x => x.Id == id);
         }
-
-        public async Task<List<Pokemon>> GetPokemonByCategory(int id) {
-            return await _dbContext.PokemonCategories.Where(x => x.CategoryId == id).Select(x => x.Pokemon).ToListAsync();
-        }
     }
 }

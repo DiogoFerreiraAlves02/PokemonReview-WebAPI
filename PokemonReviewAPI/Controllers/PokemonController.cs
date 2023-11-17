@@ -9,10 +9,9 @@ namespace PokemonReviewAPI.Controllers {
     [ApiController]
     public class PokemonController : ControllerBase {
         private readonly IPokemonRepos _pokemonRepos;
-        private readonly ICategoryRepos _categoryRepos;
-        public PokemonController(IPokemonRepos pokemonRepos, ICategoryRepos categoryRepos) {
+
+        public PokemonController(IPokemonRepos pokemonRepos) {
             _pokemonRepos= pokemonRepos;
-            _categoryRepos=categoryRepos;
         }
 
         [HttpGet]
@@ -43,17 +42,6 @@ namespace PokemonReviewAPI.Controllers {
                 return BadRequest(ModelState);
             }
             return Ok(rating);
-        }
-
-        [HttpGet("category/{categoryId}")]
-        public async Task<ActionResult<List<Pokemon>>> GetPokemonsByCategory(int categoryId) {
-            if(!await _categoryRepos.CategoryExists(categoryId)) return NotFound();
-            var pokemons = await _pokemonRepos.GetPokemonByCategory(categoryId);
-            if (!ModelState.IsValid) {
-                return BadRequest(ModelState);
-            }
-
-            return Ok(pokemons);
         }
 
     }
