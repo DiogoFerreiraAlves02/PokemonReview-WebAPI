@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace PokemonReviewAPI.Models {
     public class Review {
@@ -6,7 +7,9 @@ namespace PokemonReviewAPI.Models {
         public string Title { get; set; }
         public string Text { get; set; }
         public int Rating { get; set; }
+        [JsonIgnore]
         public Reviewer Reviewer { get; set; }
+        [JsonIgnore]
         public Pokemon Pokemon { get; set; } 
     }
 }

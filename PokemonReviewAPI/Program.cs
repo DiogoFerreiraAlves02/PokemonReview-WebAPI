@@ -24,6 +24,8 @@ namespace PokemonReviewAPI {
             builder.Services.AddScoped<ICategoryRepos, CategoryRepos>();
             builder.Services.AddScoped<ICountryRepos, CountryRepos>();
             builder.Services.AddScoped<IOwnerRepos, OwnerRepos>();
+            builder.Services.AddScoped<IReviewRepos, ReviewRepos>();
+            builder.Services.AddScoped<IReviewerRepos, ReviewerRepos>();
 
             var app = builder.Build();
 
