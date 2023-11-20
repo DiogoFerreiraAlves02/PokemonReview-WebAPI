@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokemonReviewAPI.Data;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos.Interfaces;
 
@@ -32,6 +33,38 @@ namespace PokemonReviewAPI.Repos {
 
         public async Task<bool> PokemonExists(int id) {
             return await _dbContext.Pokemons.AnyAsync(x => x.Id == id);
+        }
+
+        public async Task<Pokemon> CreatePokemon(int ownerId, int categoryId, Pokemon pokemon) {
+            var pokemonOwnerEntity = await _dbContext.Owners.Where(x => x.Id == ownerId).FirstOrDefaultAsync();
+            var pokemonCategoryEntity = await _dbContext.Categories.Where(x => x.Id == categoryId).FirstOrDefaultAsync();
+
+            var pokemonOwner = new PokemonOwner() {
+                Owner = pokemonOwnerEntity,
+                Pokemon = pokemon,
+            };
+
+            await _dbContext.PokemonOwners.AddAsync(pokemonOwner);
+
+            var pokemonCategory = new PokemonCategory() {
+                Category = pokemonCategoryEntity,
+                Pokemon = pokemon
+            };
+
+            await _dbContext.PokemonCategories.AddAsync(pokemonCategory);
+            await _dbContext.Pokemons.AddAsync(pokemon);
+
+            await _dbContext.SaveChangesAsync();
+
+            return pokemon;
+        }
+
+        public async Task<Pokemon> CheckDuplicatePokemon(Pokemon pokemon) {
+            return await _dbContext.Pokemons.Where(x => x.Name.Trim().ToUpper() == pokemon.Name.Trim().ToUpper()).FirstOrDefaultAsync();
+        }
+
+        public Pokemon ConvertFromDto(PokemonDto pokemonDto) {
+            return new Pokemon { Id = pokemonDto.Id, Name = pokemonDto.Name, BirthDate = pokemonDto.BirthDate};
         }
     }
 }

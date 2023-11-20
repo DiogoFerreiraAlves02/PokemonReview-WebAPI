@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos;
 using PokemonReviewAPI.Repos.Interfaces;
@@ -10,9 +11,11 @@ namespace PokemonReviewAPI.Controllers {
     public class ReviewController : ControllerBase {
         private readonly IReviewRepos _reviewRepos;
         private readonly IPokemonRepos _pokemonRepos;
-        public ReviewController(IReviewRepos reviewRepos, IPokemonRepos pokemonRepos) {
+        private readonly IReviewerRepos _reviewerRepos;
+        public ReviewController(IReviewRepos reviewRepos, IPokemonRepos pokemonRepos, IReviewerRepos reviewerRepos) {
             _reviewRepos=reviewRepos;
             _pokemonRepos=pokemonRepos;
+            _reviewerRepos=reviewerRepos;
         }
 
         [HttpGet]
@@ -44,6 +47,18 @@ namespace PokemonReviewAPI.Controllers {
             }
 
             return Ok(reviews);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Review>> CreateReview([FromQuery] int reviewerId, [FromQuery] int pokemonId, [FromBody] ReviewDto reviewCreate) {
+            if (reviewCreate == null) return BadRequest(ModelState);
+
+            Review review = _reviewRepos.ConvertFromDto(reviewCreate);
+            review.Pokemon = await _pokemonRepos.GetPokemon(pokemonId);
+            review.Reviewer = await _reviewerRepos.GetReviewer(reviewerId);
+            review = await _reviewRepos.CreateReview(review);
+
+            return Ok(review);
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PokemonReviewAPI.Data;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos.Interfaces;
 
@@ -24,6 +25,16 @@ namespace PokemonReviewAPI.Repos {
 
         public async Task<bool> ReviewerExists(int id) {
             return await _dbContext.Reviewers.AnyAsync(x => x.Id == id);
+        }
+
+        public async Task<Reviewer> CreateReviewer(Reviewer reviewer) {
+            await _dbContext.Reviewers.AddAsync(reviewer);
+            await _dbContext.SaveChangesAsync();
+            return reviewer;
+        }
+
+        public Reviewer ConvertFromDto(ReviewerDto reviewerDto) {
+            return new Reviewer { Id= reviewerDto.Id, FirstName = reviewerDto.FirstName, LastName = reviewerDto.LastName};
         }
     }
 }

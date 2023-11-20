@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos;
 using PokemonReviewAPI.Repos.Interfaces;
@@ -42,6 +43,17 @@ namespace PokemonReviewAPI.Controllers {
             }
 
             return Ok(reviews);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Reviewer>> CreateReviewer([FromBody] ReviewerDto reviewerCreate) {
+            if (reviewerCreate == null) return BadRequest(ModelState);
+
+            Reviewer reviewer = _reviewerRepos.ConvertFromDto(reviewerCreate);
+
+            reviewer = await _reviewerRepos.CreateReviewer(reviewer);
+
+            return Ok(reviewer);
         }
 
     }

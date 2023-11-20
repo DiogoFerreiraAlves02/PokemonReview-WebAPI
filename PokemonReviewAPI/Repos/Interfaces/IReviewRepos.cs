@@ -1,4 +1,5 @@
-﻿using PokemonReviewAPI.Models;
+﻿using PokemonReviewAPI.Dto;
+using PokemonReviewAPI.Models;
 
 namespace PokemonReviewAPI.Repos.Interfaces {
     public interface IReviewRepos {
@@ -6,5 +7,7 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<Review> GetReview(int id);
         Task<List<Review>> GetReviewsOfAPokemon(int id);
         Task<bool> ReviewExists(int id);
+        Task<Review> CreateReview(Review review);
+        Review ConvertFromDto(ReviewDto reviewDto);
     }
 }

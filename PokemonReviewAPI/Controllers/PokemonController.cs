@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PokemonReviewAPI.Dto;
 using PokemonReviewAPI.Models;
 using PokemonReviewAPI.Repos;
 using PokemonReviewAPI.Repos.Interfaces;
@@ -42,6 +43,22 @@ namespace PokemonReviewAPI.Controllers {
                 return BadRequest(ModelState);
             }
             return Ok(rating);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Pokemon>> CreatePokemon([FromQuery] int ownerId, [FromQuery] int categoryId, [FromBody] PokemonDto pokemonCreate) {
+            if (pokemonCreate == null) return BadRequest(ModelState);
+
+            Pokemon pokemon = _pokemonRepos.ConvertFromDto(pokemonCreate);
+
+            if (await _pokemonRepos.CheckDuplicatePokemon(pokemon) != null) {
+                ModelState.AddModelError("", "Pokemon already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            pokemon = await _pokemonRepos.CreatePokemon(ownerId, categoryId, pokemon);
+
+            return Ok(pokemon);
         }
 
     }
