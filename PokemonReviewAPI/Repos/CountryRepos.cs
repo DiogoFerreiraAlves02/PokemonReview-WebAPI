@@ -50,5 +50,10 @@ namespace PokemonReviewAPI.Repos {
             await _dbContext.SaveChangesAsync();
             return country;
         }
+
+        public async Task<bool> DeleteCountry(Country country) {
+            _dbContext.Countries.Remove(country);
+            return await _dbContext.SaveChangesAsync() > 0 ? true : false;
+        }
     }
 }

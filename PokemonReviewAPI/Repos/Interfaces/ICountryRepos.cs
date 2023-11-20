@@ -12,5 +12,6 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<Country> CheckDuplicateCountry(Country country);
         Task<Country> UpdateCountry(Country country);
         Country ConvertFromDto(CountryDto countryDto);
+        Task<bool> DeleteCountry(Country country);
     }
 }

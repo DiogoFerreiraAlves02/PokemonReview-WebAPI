@@ -12,5 +12,6 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<Pokemon> CheckDuplicatePokemon(Pokemon pokemon);
         Task<Pokemon> UpdatePokemon(Pokemon pokemon);
         Pokemon ConvertFromDto(PokemonDto pokemonDto);
+        Task<bool> DeletePokemon(Pokemon pokemon);
     }
 }

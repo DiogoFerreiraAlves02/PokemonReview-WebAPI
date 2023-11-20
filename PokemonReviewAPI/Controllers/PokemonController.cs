@@ -78,5 +78,27 @@ namespace PokemonReviewAPI.Controllers {
             return Ok(pokemon);
         }
 
+        [HttpDelete("{pokemonId}")]
+        public async Task<ActionResult<bool>> DeletePokemon(int pokemonId) {
+            if (!await _pokemonRepos.PokemonExists(pokemonId)) return NotFound();
+
+            var reviewsToDelete = await _reviewRepos.GetReviewsOfAPokemon(pokemonId);
+
+            var pokemonToDelete = await _pokemonRepos.GetPokemon(pokemonId);
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            if (!await _reviewRepos.DeleteReviews(reviewsToDelete)) {
+                ModelState.AddModelError("", "Something went wrong deleting reviews");
+            }
+
+            var deleted = await _pokemonRepos.DeletePokemon(pokemonToDelete);
+
+            if (!deleted) {
+                ModelState.AddModelError("", "Something went wrong deleting pokemon");
+            }
+            return Ok(deleted);
+        }
+
     }
 }

@@ -77,5 +77,21 @@ namespace PokemonReviewAPI.Controllers {
             return Ok(country);
         }
 
+        [HttpDelete("{countryId}")]
+        public async Task<ActionResult<bool>> DeleteCountry(int countryId) {
+            if (!await _countryRepos.CountryExists(countryId)) return NotFound();
+
+            var countryToDelete = await _countryRepos.GetCountry(countryId);
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var deleted = await _countryRepos.DeleteCountry(countryToDelete);
+
+            if (!deleted) {
+                ModelState.AddModelError("", "Something went wrong deleting country");
+            }
+            return Ok(deleted);
+        }
+
     }
 }

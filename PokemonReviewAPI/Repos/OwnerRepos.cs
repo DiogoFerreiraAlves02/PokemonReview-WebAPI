@@ -46,5 +46,10 @@ namespace PokemonReviewAPI.Repos {
             await _dbContext.SaveChangesAsync();
             return owner;
         }
+
+        public async Task<bool> DeleteOwner(Owner owner) {
+            _dbContext.Owners.Remove(owner);
+            return await _dbContext.SaveChangesAsync() > 0 ? true : false;
+        }
     }
 }

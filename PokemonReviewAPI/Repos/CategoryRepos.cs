@@ -46,5 +46,10 @@ namespace PokemonReviewAPI.Repos {
             await _dbContext.SaveChangesAsync();
             return category;
         }
+
+        public async Task<bool> DeleteCategory(Category category) {
+            _dbContext.Categories.Remove(category);
+            return await _dbContext.SaveChangesAsync() > 0 ? true : false;
+        }
     }
 }

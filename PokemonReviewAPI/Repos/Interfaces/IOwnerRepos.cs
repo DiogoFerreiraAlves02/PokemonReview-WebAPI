@@ -11,5 +11,6 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<Owner> CreateOwner(Owner owner);
         Task<Owner> UpdateOwner(Owner owner);
         Owner ConvertFromDto(OwnerDto ownerDto);
+        Task<bool> DeleteOwner(Owner owner);
     }
 }

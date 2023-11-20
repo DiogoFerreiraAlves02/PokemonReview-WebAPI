@@ -11,5 +11,6 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<Category> CheckDuplicateCategory(Category category);
         Task<Category> UpdateCategory(Category category);
         Category ConvertFromDto(CategoryDto categoryDto);
+        Task<bool> DeleteCategory(Category category);
     }
 }

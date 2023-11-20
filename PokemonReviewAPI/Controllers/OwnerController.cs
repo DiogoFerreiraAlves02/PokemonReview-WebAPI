@@ -85,5 +85,21 @@ namespace PokemonReviewAPI.Controllers {
             return Ok(owner);
         }
 
+        [HttpDelete("{ownerId}")]
+        public async Task<ActionResult<bool>> DeleteOwner(int ownerId) {
+            if (!await _ownerRepos.OwnerExists(ownerId)) return NotFound();
+
+            var ownerToDelete = await _ownerRepos.GetOwner(ownerId);
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var deleted = await _ownerRepos.DeleteOwner(ownerToDelete);
+
+            if (!deleted) {
+                ModelState.AddModelError("", "Something went wrong deleting owner");
+            }
+            return Ok(deleted);
+        }
+
     }
 }

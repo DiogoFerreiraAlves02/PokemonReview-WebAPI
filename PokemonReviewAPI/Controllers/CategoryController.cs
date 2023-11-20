@@ -75,5 +75,21 @@ namespace PokemonReviewAPI.Controllers {
 
             return Ok(category);
         }
+
+        [HttpDelete("{categoryId}")]
+        public async Task<ActionResult<bool>> DeleteCategory(int categoryId) {
+            if (!await _categoryRepos.CategoryExists(categoryId)) return NotFound();
+
+            var categoryToDelete = await _categoryRepos.GetCategory(categoryId);
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var deleted = await _categoryRepos.DeleteCategory(categoryToDelete);
+
+            if (!deleted) {
+                ModelState.AddModelError("", "Something went wrong deleting category");
+            }
+            return Ok(deleted);
+        }
     }
 }

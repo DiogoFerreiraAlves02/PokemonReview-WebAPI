@@ -10,5 +10,6 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<Reviewer> CreateReviewer(Reviewer reviewer);
         Reviewer ConvertFromDto(ReviewerDto reviewerDto);
         Task<Reviewer> UpdateReviewer(Reviewer reviewer);
+        Task<bool> DeleteReviewer(Reviewer reviewer);
     }
 }
