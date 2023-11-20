@@ -40,5 +40,11 @@ namespace PokemonReviewAPI.Repos {
         public Category ConvertFromDto(CategoryDto categoryDto) {
             return new Category { Id = categoryDto.Id, Name = categoryDto.Name };
         }
+
+        public async Task<Category> UpdateCategory(Category category) {
+            _dbContext.Categories.Update(category);
+            await _dbContext.SaveChangesAsync();
+            return category;
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<bool> PokemonExists(int id);
         Task<Pokemon> CreatePokemon(int ownerId, int categoryId,Pokemon pokemon);
         Task<Pokemon> CheckDuplicatePokemon(Pokemon pokemon);
+        Task<Pokemon> UpdatePokemon(Pokemon pokemon);
         Pokemon ConvertFromDto(PokemonDto pokemonDto);
     }
 }

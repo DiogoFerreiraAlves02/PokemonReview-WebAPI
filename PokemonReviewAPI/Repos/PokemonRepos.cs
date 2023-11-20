@@ -66,5 +66,12 @@ namespace PokemonReviewAPI.Repos {
         public Pokemon ConvertFromDto(PokemonDto pokemonDto) {
             return new Pokemon { Id = pokemonDto.Id, Name = pokemonDto.Name, BirthDate = pokemonDto.BirthDate};
         }
+
+        public async Task<Pokemon> UpdatePokemon(Pokemon pokemon) {
+            _dbContext.Pokemons.Update(pokemon);
+            await _dbContext.SaveChangesAsync();
+            return pokemon;
+        }
+
     }
 }

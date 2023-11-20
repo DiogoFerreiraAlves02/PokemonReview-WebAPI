@@ -56,5 +56,20 @@ namespace PokemonReviewAPI.Controllers {
             return Ok(reviewer);
         }
 
+        [HttpPut("{reviewerId}")]
+        public async Task<ActionResult<Reviewer>> UpdateReviewer(int reviewerId, [FromBody] ReviewerDto updatedReviewer) {
+            if (updatedReviewer == null) return BadRequest(ModelState);
+
+            if (reviewerId != updatedReviewer.Id) return BadRequest(ModelState);
+
+            if (!await _reviewerRepos.ReviewerExists(reviewerId)) return NotFound();
+
+            Reviewer reviewer = _reviewerRepos.ConvertFromDto(updatedReviewer);
+
+            await _reviewerRepos.UpdateReviewer(reviewer);
+
+            return Ok(reviewer);
+        }
+
     }
 }

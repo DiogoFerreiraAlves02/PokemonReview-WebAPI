@@ -40,5 +40,11 @@ namespace PokemonReviewAPI.Repos {
         public Owner ConvertFromDto(OwnerDto ownerDto) {
             return new Owner { Id = ownerDto.Id, FirstName = ownerDto.FirstName, LastName = ownerDto.LastName, Gym = ownerDto.Gym };
         }
+
+        public async Task<Owner> UpdateOwner(Owner owner) {
+            _dbContext.Owners.Update(owner);
+            await _dbContext.SaveChangesAsync();
+            return owner;
+        }
     }
 }

@@ -61,5 +61,19 @@ namespace PokemonReviewAPI.Controllers {
             return Ok(category);
         }
 
+        [HttpPut("{categoryId}")]
+        public async Task<ActionResult<Category>> UpdateCategory(int categoryId, [FromBody] CategoryDto updatedCategory) {
+            if (updatedCategory == null) return BadRequest(ModelState);
+
+            if(categoryId != updatedCategory.Id) return BadRequest(ModelState);
+
+            if(!await _categoryRepos.CategoryExists(categoryId)) return NotFound();
+
+            Category category = _categoryRepos.ConvertFromDto(updatedCategory);
+
+            await _categoryRepos.UpdateCategory(category);
+
+            return Ok(category);
+        }
     }
 }

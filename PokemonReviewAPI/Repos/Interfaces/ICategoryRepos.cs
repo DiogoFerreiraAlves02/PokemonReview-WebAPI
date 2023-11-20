@@ -9,6 +9,7 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<bool> CategoryExists(int id);
         Task<Category> CreateCategory(Category category);
         Task<Category> CheckDuplicateCategory(Category category);
+        Task<Category> UpdateCategory(Category category);
         Category ConvertFromDto(CategoryDto categoryDto);
     }
 }

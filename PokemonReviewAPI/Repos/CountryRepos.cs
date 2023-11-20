@@ -44,5 +44,11 @@ namespace PokemonReviewAPI.Repos {
         public Country ConvertFromDto(CountryDto countryDto) {
             return new Country { Id = countryDto.Id, Name = countryDto.Name };
         }
+
+        public async Task<Country> UpdateCountry(Country country) {
+            _dbContext.Countries.Update(country);
+            await _dbContext.SaveChangesAsync();
+            return country;
+        }
     }
 }

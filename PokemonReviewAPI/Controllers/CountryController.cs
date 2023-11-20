@@ -62,5 +62,20 @@ namespace PokemonReviewAPI.Controllers {
             return Ok(country);
         }
 
+        [HttpPut("{countryId}")]
+        public async Task<ActionResult<Country>> UpdateCountry(int countryId, [FromBody] CountryDto updatedCountry) {
+            if (updatedCountry == null) return BadRequest(ModelState);
+
+            if (countryId != updatedCountry.Id) return BadRequest(ModelState);
+
+            if (!await _countryRepos.CountryExists(countryId)) return NotFound();
+
+            Country country = _countryRepos.ConvertFromDto(updatedCountry);
+
+            await _countryRepos.UpdateCountry(country);
+
+            return Ok(country);
+        }
+
     }
 }

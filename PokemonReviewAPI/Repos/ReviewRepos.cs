@@ -36,5 +36,11 @@ namespace PokemonReviewAPI.Repos {
         public Review ConvertFromDto(ReviewDto reviewDto) {
             return new Review { Id= reviewDto.Id, Title=reviewDto.Title, Text = reviewDto.Text, Rating = reviewDto.Rating};
         }
+
+        public async Task<Review> UpdateReview(Review review) {
+            _dbContext.Reviews.Update(review);
+            await _dbContext.SaveChangesAsync();
+            return review;
+        }
     }
 }

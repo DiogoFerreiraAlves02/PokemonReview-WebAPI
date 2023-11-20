@@ -70,5 +70,20 @@ namespace PokemonReviewAPI.Controllers {
             return Ok(owner);
         }
 
+        [HttpPut("{ownerId}")]
+        public async Task<ActionResult<Owner>> UpdateOwner(int ownerId, [FromBody] OwnerDto updatedOwner) {
+            if (updatedOwner == null) return BadRequest(ModelState);
+
+            if (ownerId != updatedOwner.Id) return BadRequest(ModelState);
+
+            if (!await _ownerRepos.OwnerExists(ownerId)) return NotFound();
+
+            Owner owner = _ownerRepos.ConvertFromDto(updatedOwner);
+
+            await _ownerRepos.UpdateOwner(owner);
+
+            return Ok(owner);
+        }
+
     }
 }

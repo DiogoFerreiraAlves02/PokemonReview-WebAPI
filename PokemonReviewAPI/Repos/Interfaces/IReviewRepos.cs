@@ -9,5 +9,6 @@ namespace PokemonReviewAPI.Repos.Interfaces {
         Task<bool> ReviewExists(int id);
         Task<Review> CreateReview(Review review);
         Review ConvertFromDto(ReviewDto reviewDto);
+        Task<Review> UpdateReview(Review review);
     }
 }

@@ -10,9 +10,11 @@ namespace PokemonReviewAPI.Controllers {
     [ApiController]
     public class PokemonController : ControllerBase {
         private readonly IPokemonRepos _pokemonRepos;
+        private readonly IReviewRepos _reviewRepos;
 
-        public PokemonController(IPokemonRepos pokemonRepos) {
+        public PokemonController(IPokemonRepos pokemonRepos, IReviewRepos reviewRepos) {
             _pokemonRepos= pokemonRepos;
+            _reviewRepos= reviewRepos;
         }
 
         [HttpGet]
@@ -57,6 +59,21 @@ namespace PokemonReviewAPI.Controllers {
             }
 
             pokemon = await _pokemonRepos.CreatePokemon(ownerId, categoryId, pokemon);
+
+            return Ok(pokemon);
+        }
+
+        [HttpPut("{pokemonId}")]
+        public async Task<ActionResult<Pokemon>> UpdatePokemon(int pokemonId,[FromBody] PokemonDto updatedPokemon) {
+            if (updatedPokemon == null) return BadRequest(ModelState);
+
+            if (pokemonId != updatedPokemon.Id) return BadRequest(ModelState);
+
+            if (!await _pokemonRepos.PokemonExists(pokemonId)) return NotFound();
+
+            Pokemon pokemon = _pokemonRepos.ConvertFromDto(updatedPokemon);
+
+            await _pokemonRepos.UpdatePokemon(pokemon);
 
             return Ok(pokemon);
         }
